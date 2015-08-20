@@ -1,0 +1,99 @@
+<html>
+    <head>
+    	<title>RMQ Statistic</title>     
+	    <script language="javascript" type="text/javascript" src="/static/js/jquery.js"></script>
+        <script language="javascript" type="text/javascript" src="/static/js/dygraph-combined.js"></script>
+
+        <style type="text/css">
+          .line {
+            visibility: hidden;
+            background-color: black;
+            position: absolute;
+            pointer-events: none;  /* let mouse events fall through to the chart */
+          }
+          .yline {
+            width: 100%;
+            height: 1px;
+          }
+          .xline {
+            height: 100%;
+            width: 1px;
+          }
+        </style>
+
+    </head>
+
+
+    <body>
+
+        <p>Let's see on the graph..</p>
+
+        <div id="my_chart" style="display: block; width: 90%; height: 70%; "></div>
+        <script type="text/javascript">
+
+                debugger;
+                var qname = "{{queue}}";
+                var fails = {{fails_list}};
+
+                g = new Dygraph(my_chart,
+                      "/static/csv/" + qname + ".csv",
+                      { customBars: false,
+                        animatedZooms: true,
+                        labelsKMB: false,
+                        xlabel: 'Date',
+                        ylabel: 'Messages (average value)',
+                        drawAxesAtZero: true,
+                        axisLineWidth: 1.5,
+
+                        'Forecast': {
+                            strokeWidth: 2
+                        },
+                        'Lower Bound': {
+                            strokeWidth: 2
+                        },
+                        'Upper Bound': {
+                            strokeWidth: 2
+                        },
+                        'Value': {
+                            strokeWidth: 3
+                        },
+                        'Yesterday': {
+                            strokeWidth: 1,
+                            fillGraph: true
+                        },
+                        colors: ["black",
+                             "rgb(255, 0, 0)",
+                             "rgb(0, 255, 0)",
+                             "rgb(255, 0, 255)",
+                             "rgb(0, 0, 255)",
+                             "grey"
+                             ],
+                        strokeWidth: 2.0,
+
+                        underlayCallback: function(canvas, area, g) {
+
+                                    canvas.fillStyle = "rgba(255, 185, 15, 1.0)";
+
+                                    function highlight_period(x_start, x_end) {
+                                      var canvas_left_x = g.toDomXCoord(x_start);
+                                      var canvas_right_x = g.toDomXCoord(x_end);
+                                      var canvas_width = canvas_right_x - canvas_left_x;
+                                      canvas.fillRect(canvas_left_x, area.y, canvas_width, area.h);
+                                    }
+
+                                    var min_data_x = g.getValue(0,0);
+                                    var max_data_x = g.getValue(g.numRows()-1,0);
+
+                                    for (var ind in fails) {
+
+                                          var start_x_highlight = fails[ind][0];
+                                          var end_x_highlight = fails[ind][1]; 
+
+                                          highlight_period(start_x_highlight,end_x_highlight); 
+                                    }                                   
+                              }
+                        }
+                );
+        </script>
+    </body>
+</html>

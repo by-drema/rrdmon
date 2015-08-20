@@ -1,0 +1,81 @@
+<html>
+    <head>
+        <title>Greatest Monitoring</title>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script language="javascript" type="text/javascript" src="/static/js/jquery.simple-dtpicker.js"></script>
+        <link rel="stylesheet" type="text/css" href="/static/css/jquery.simple-dtpicker.css" />
+        <style type="text/css">
+		body{
+		     background-color: lightblue;
+                    -webkit-background-size: cover;
+                    -moz-background-size: cover;
+                    background-size: cover;
+                }
+        </style>
+	</head>
+
+
+        <body bgcolor="white" text="black" style="position:absolute; top:10%; left:30%; text-align: center;">
+                
+		<form method="get" name="testForm" action="/stats">
+
+            <div>
+
+                <p>Date FROM:<input type="text" name="date_from" value=""></p>
+                <p>Date TOOO:<input type="text" name="date_to" value=""></p>
+                <script type="text/javascript">
+                    $(function(){
+                        $('*[name=date_from]').appendDtpicker({
+                            "inline": true,
+                            'minuteInterval' : 5,
+                            'dateFormat' : 'DD-MM-YYYY hh:mm:00',
+                            "firstDayOfWeek": 1
+                        });
+                        $('*[name=date_to]').appendDtpicker({
+                            "inline": true,
+                            'minuteInterval' : 5,
+                            'dateFormat' : 'DD-MM-YYYY hh:mm:00',
+                            "firstDayOfWeek": 1
+                        });
+                    });
+                </script>
+			</div>
+
+            <div>
+                % for monitor in monitors_info.keys():
+                    <div>
+                        <input type="radio" name="monitor" value="{{ monitor }}" onchange="disableInactiveList(this);">{{ monitor }}<br>
+                        <select id="{{ monitor }}" title="Select queue name for getting statistic" name="queue" class="my-style" disabled >
+                            <option value=""><text>Select Queue's name ({{ monitor }})</text></option>
+                            % for qName in monitors_info[monitor]:
+                            <option value="{{ qName }}">{{ qName }}</option>
+                            % end
+                        </select>
+                   </div>
+                % end
+            </div>
+
+            <script>
+                function disableInactiveList() {
+
+                    $("input[name='monitor']").each(function( index ) {
+                            debugger;
+                            if ($( this ).is(":checked")) {
+                                $(this).parent().find('select').removeAttr('disabled');
+                            }
+                            else {
+                                $(this).parent().find('select').attr('disabled', 'disabled');
+                            }
+                        });
+                }
+            </script>
+
+			<p>Graph type:</p>
+
+			<input type="radio" name="graph" class="my-style" value="js-graph" checked>js-graph<br>
+            <input type="radio" name="graph" class="my-style" value="rrd-graph">rrd-graph<br>
+
+			<p><input name="submit_but" type="submit" class="my-style" value="Go!"></p>
+		</form>
+    </body>
+</html>
