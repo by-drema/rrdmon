@@ -15,7 +15,7 @@ rrdmon - это мониторинг количества сообщений в 
 
 Отклонения в поведении наблюдаемых объектов (аберрации) определяются как допустимое кол-во выходов за рамки предсказаний в заданном плавающем окне, а именно: 5 из 7.
 Это означает, что, если среди последних 7ми значений (плавающее окно) - 5 не попали в прогнозируемый коридор, то в соответствующий временной ряд будет занесено значение "1", являющееся индикатором аберрации на данном временном интервале. В соответствии с этим можно генерировать предупреждение.
-> В настоящее время реализована возможность отправки уведомлений по почте, секция "Email" в конфигурационном файле.
+> В настоящее время реализована возможность отправки уведомлений по почте (секция "Email" в конфигурационном файле).
 > Для этого мониторинг должен быть запущен с ключами " --mon --chk".
 > Однако, в настоящее время такой запуск нежелателен, т.к. радикально влияет на производительность мониторинга (улучшение в разработке).
 
@@ -45,7 +45,7 @@ rrdmon - это мониторинг количества сообщений в 
 * Install rrdtool in system:
 ```sh
     $ sudo apt-get install rrdtool librrd-dev 
-    $ sudo apt-get install python3-dev  ### may be no need to do it (because we've installed python3 "from scratch" using src)
+    $ sudo apt-get install python3-dev  ### may be no needed (because we've installed python3 "from scratch")
  ```
      
 * Install pip & virtualenv:
@@ -75,3 +75,15 @@ rrdmon - это мониторинг количества сообщений в 
     $ python main.py start (stop) --web && tail -f var/log/webserv.log           # запуск web-интерфейса
 ```
 
+
+=== TODO
+
+* aliases
+* autodeploy
+* re-write ui
+* queues filtering
+* webui demonization
+* processing .rrd files in separate thread/process
+* extended and formatted logging (via logging module)
+* replace self-written daemon with standart modules
+* split solid application into separate independent tools
